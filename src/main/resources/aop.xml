@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop" xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="sampleAdder" class="com.mycompany.demoaop.SampleAdder"></bean>
+    <bean id="doAfterReturningAspect" class="com.mycompany.demoaop.AdderAfterReturnAspect"></bean>
+    <bean id="sebelumAdder" class="com.mycompany.demoaop.SebelumAdd"></bean>
+    
+    <!-- penggunaan dua aspect untuk before dan after-returning -->
+    <aop:config>
+        <aop:aspect id="aspect" ref="sebelumAdder">
+            <aop:pointcut id="pointCutAfterReturning" expression="execution(* com.mycompany.demoaop.SampleAdder+.*(..))"></aop:pointcut>
+            <aop:before method="sebelumAdd" pointcut-ref="pointCutAfterReturning"></aop:before>
+        </aop:aspect>
+        
+        <aop:aspect  id="aspect" ref="doAfterReturningAspect">
+            <aop:pointcut id="pointCutAfterReturning" expression="execution(* com.mycompany.demoaop.SampleAdder+.*(..))"></aop:pointcut>
+            <aop:after-returning method="afterReturn" returning="returnValue" pointcut-ref="pointCutAfterReturning"></aop:after-returning>
+        </aop:aspect>
+    </aop:config>
+
+</beans>
